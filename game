@@ -10,13 +10,11 @@ from tkinter import messagebox
 import random
 
 
-# Initialize the main window
 class Hangman:
     root = tk.Tk()
     root.title("Hangman Game")
 
 
-# Game variables
 word_list = ("APPLE", "BALLOON", "COMPUTER", "DOLPHIN", "ELEPHANT", "FOXTROT", "GOLF", "HANGMAN", "INDIGO",
              "JAVA", "KILOMETER", "LIBRARY", "MOUSE", "NINJA", "OCTOPUS", "PYTHON", "QUEEN", "ROOSTER", "SPOON",
              "TANGO", "UNIFORM", "VICTORY", "WHISKEY", "XYLOPHONE", "YANKEE", "ZEBRA")
@@ -26,7 +24,6 @@ wrong_guesses = 0
 max_wrong_guesses = 6
 
 
-# Function to draw the hangman
 def draw_hangman(wrong_guesses):
     canvas.delete("all")
     # Base
@@ -55,7 +52,6 @@ def draw_hangman(wrong_guesses):
         canvas.create_line(100, 130, 120, 160)
 
 
-# Function to check the letter guessed by the player
 def check_letter():
     global wrong_guesses
     letter = entry.get().upper()
@@ -77,13 +73,11 @@ def check_letter():
             root.quit()
 
 
-# Function to update the displayed word
 def update_word_display():
     display_word = " ".join(char if char in guessed_letters else "_" for char in word)
     word_label.config(text=display_word)
 
 
-# Creating the UI elements
 root = tk.Tk()
 root.title("Hangman Game")
 
@@ -99,7 +93,6 @@ entry.pack(pady=10)
 guess_button = tk.Button(root, text="Guess", command=check_letter)
 guess_button.pack(pady=10)
 
-# Initial draw
 draw_hangman(wrong_guesses)
 update_word_display()
 
