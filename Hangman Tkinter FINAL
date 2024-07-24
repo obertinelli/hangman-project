@@ -1,0 +1,96 @@
+# Author: Olivia Bertinelli
+# Date written: 7/10/2024
+# Assignment: Final Project SDEV 140
+"""
+This creates a hangman game where the user has 6 guesses to
+correctly guess a random word chosen by the CPU.
+"""
+import tkinter as tk
+from tkinter import messagebox
+import random
+
+
+word_list = ("APPLE", "BALLOON", "COMPUTER", "DOLPHIN", "ELEPHANT", "FOXTROT", "GOLF", "HANGMAN", "INDIGO",
+             "JAVA", "KILOMETER", "LIBRARY", "MOUSE", "NINJA", "OCTOPUS", "PYTHON", "QUEEN", "ROOSTER", "SPOON",
+             "TANGO", "UNIFORM", "VICTORY", "WHISKEY", "XYLOPHONE", "YANKEE", "ZEBRA")
+word = random.choice(word_list)
+guessed_letters = []
+wrong_guesses = 0
+max_wrong_guesses = 6
+
+
+def draw_hangman(wrong_guesses):  # Draws the lines for each wrong guess
+    canvas.delete("all")
+    # Base
+    canvas.create_line(10, 190, 150, 190)
+    # Pole
+    canvas.create_line(30, 190, 30, 30)
+    canvas.create_line(30, 30, 100, 30)
+    canvas.create_line(100, 30, 100, 50)
+    if wrong_guesses > 0:
+        # Head
+        canvas.create_oval(90, 50, 110, 70)
+    if wrong_guesses > 1:
+        # Body
+        canvas.create_line(100, 70, 100, 130)
+    if wrong_guesses > 2:
+        # Left Arm
+        canvas.create_line(100, 90, 80, 110)
+    if wrong_guesses > 3:
+        # Right Arm
+        canvas.create_line(100, 90, 120, 110)
+    if wrong_guesses > 4:
+        # Left Leg
+        canvas.create_line(100, 130, 80, 160)
+    if wrong_guesses > 5:
+        # Right Leg
+        canvas.create_line(100, 130, 120, 160)
+
+
+def check_letter():  # Checks each entry to make sure it is in the random word
+    global wrong_guesses
+    letter = entry.get().upper()
+    entry.delete(0, tk.END)
+    if letter in guessed_letters:
+        messagebox.showinfo("Hangman", "You already guessed that letter.")
+    elif letter in word:
+        guessed_letters.append(letter)
+        update_word_display()
+        if all(char in guessed_letters for char in word):
+            messagebox.showinfo("Hangman", "Congratulations, you won!")
+            root.quit()
+    else:
+        guessed_letters.append(letter)
+        wrong_guesses += 1
+        draw_hangman(wrong_guesses)
+        if wrong_guesses >= max_wrong_guesses:
+            messagebox.showinfo("Hangman", f"You lost! The word was: {word}")
+            root.quit()
+
+
+def update_word_display():  # Displays the characters
+    display_word = " ".join(char if char in guessed_letters else "_" for char in word)
+    word_label.config(text=display_word)
+
+
+root = tk.Tk()
+root.title("Hangman Game")
+
+canvas = tk.Canvas(root, width=200, height=200)
+canvas.pack()
+
+word_label = tk.Label(root, text="_ " * len(word), font=("Helvetica", 18))
+word_label.pack(pady=10)
+
+entry = tk.Entry(root)
+entry.pack(pady=10)
+
+guess_button = tk.Button(root, text="Guess", command=check_letter)
+guess_button.pack(pady=10)
+
+
+draw_hangman(wrong_guesses)
+update_word_display()
+
+
+root.mainloop()  # Plays the game
